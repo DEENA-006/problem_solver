@@ -10,7 +10,16 @@ from google import genai
 from google.genai import types
 
 load_dotenv()
-client = genai.Client(api_key=os.getenv("GEMINI_API_KEY"))
+
+# Read API key from environment variable (local .env) or Streamlit Secrets (Cloud)
+api_key = os.getenv("GEMINI_API_KEY")
+if not api_key:
+    try:
+        api_key = st.secrets.get("GEMINI_API_KEY")
+    except Exception:
+        api_key = None
+
+client = genai.Client(api_key=api_key)
 
 st.set_page_config(
     page_title="STEM Tutor AI",
